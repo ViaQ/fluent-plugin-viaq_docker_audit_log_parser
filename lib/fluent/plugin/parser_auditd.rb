@@ -22,8 +22,8 @@ module Fluent
         # A temporary solution is to mark unwanted messages as something
         # that is easy to find and exclude by the fluentd grep plugin.
         parsed_line = {"virt-control" => "false"} if parsed_line.nil?
-        
-        yield time, parsed_line
+
+        yield Time.now.to_f, parsed_line
       rescue Fluent::Auditd::AuditdParserException => e
         log.error e.message
         yield nil, nil
