@@ -14,7 +14,7 @@ module Fluent
     def parse(text)
       begin
         parsed_line = @auditd.parse_auditd_line text
-        time = parsed_line.nil? ? nil : DateTime.parse(parsed_line['time']).to_time.to_f
+        time = parsed_line.nil? ? Time.now.to_f : DateTime.parse(parsed_line['time']).to_time.to_f
 
         # All other logs than virt-control should be ignored.
         # Since this plugin is tailored specifically to atomic-project
@@ -23,7 +23,7 @@ module Fluent
         # that is easy to find and exclude by the fluentd grep plugin.
         parsed_line = {"virt-control" => "false"} if parsed_line.nil?
 
-        yield Time.now.to_f, parsed_line
+        yield time, parsed_line
       rescue Fluent::Auditd::AuditdParserException => e
         log.error e.message
         yield nil, nil
