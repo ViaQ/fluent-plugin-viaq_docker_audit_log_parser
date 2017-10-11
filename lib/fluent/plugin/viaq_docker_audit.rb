@@ -2,9 +2,9 @@ require 'time'
 
 # Parses docker audit log to format that fits Origin Aggregated Logging
 module Fluent
-  class Auditd
+  class ViaqDockerAudit
 
-    class AuditdParserException < StandardError
+    class ViaqDockerAuditParserException < StandardError
     end
 
     # Keys as found in raw audit.log messsages
@@ -53,7 +53,7 @@ module Fluent
     # Takes one line from audit.log and returns hash
     # that fits the OAL format.
     # Messages of other types than 'virt_control' are ignored.
-    def parse_auditd_line(line)
+    def parse_audit_line(line)
       if filter_virt_control(line)
         event = {}
         docker = {}
@@ -62,7 +62,7 @@ module Fluent
           parse_msg(docker, metadata['g2'].split)
           event[IN_EVENT_TYPE] = docker
         else
-          raise AuditdParserException, "Couldn't parse message: #{line}"
+          raise ViaqDockerAuditParserException, "Couldn't parse message: #{line}"
         end
         return normalize(event)
       end

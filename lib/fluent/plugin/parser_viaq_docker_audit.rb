@@ -1,19 +1,19 @@
-require "fluent/plugin/auditd"
+require "fluent/plugin/viaq_docker_audit"
 require 'fluent/parser'
 require 'fluent/time'
 
 module Fluent
-  class AuditdParser < Parser
-    Plugin.register_parser("auditd", self)
+  class ViaqDockerAuditParser < Parser
+    Plugin.register_parser("viaq_docker_audit", self)
 
     def configure(conf={})
       super
-      @auditd = Auditd.new()
+      @audit_parser = ViaqDockerAudit.new()
     end
 
     def parse(text)
       begin
-        parsed_line = @auditd.parse_auditd_line text
+        parsed_line = @audit_parser.parse_audit_line text
         time = parsed_line.nil? ? Time.now.to_f : DateTime.parse(parsed_line['time']).to_time.to_f
 
         # All other logs than virt-control should be ignored.
@@ -24,7 +24,7 @@ module Fluent
         parsed_line = {"virt-control" => "false"} if parsed_line.nil?
 
         yield time, parsed_line
-      rescue Fluent::Auditd::AuditdParserException => e
+      rescue Fluent::ViaqDockerAudit::ViaqDockerAuditParserException => e
         log.error e.message
         yield nil, nil
       end
