@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'fluent-plugin-viaq_docker_audit_log_parser'
-  spec.version       = '0.0.4'
+  spec.version       = '0.0.5'
   spec.authors       = ['Josef Karasek']
   spec.email         = ['jkarasek@redhat.com']
   spec.summary       = %q{Fluentd plugin for parsing atomic-project docker auditd logs}

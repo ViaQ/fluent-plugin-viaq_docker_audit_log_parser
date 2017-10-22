@@ -50,6 +50,10 @@ module Fluent
     VIRT_CONTROL = 'VIRT_CONTROL'
     ENV_HOSTNAME = 'NODE_NAME'
     
+    def initialize()
+      @@hostname = ENV[ENV_HOSTNAME].nil? ? nil : String.new(ENV[ENV_HOSTNAME])
+    end
+
     # Takes one line from audit.log and returns hash
     # that fits the OAL format.
     # Messages of other types than 'virt_control' are ignored.
@@ -105,7 +109,7 @@ module Fluent
     def normalize(target)
       event = {}
       event[TIME]              = Time.at(target[TIME].to_f).utc.to_datetime.rfc3339(6)
-      event[OUT_HOST_HOSTNAME] = ENV[ENV_HOSTNAME] unless ENV[ENV_HOSTNAME].nil?
+      event[OUT_HOST_HOSTNAME] = @@hostname unless @@hostname.nil?
 
       event[SYSTEMD] = { TRUSTED => {} }
       event[SYSTEMD][TRUSTED][OUT_HOST_PID]           = target[IN_HOST_PID] unless target[IN_HOST_PID].nil?
