@@ -1,6 +1,7 @@
-require "fluent/plugin/viaq_docker_audit"
 require 'fluent/parser'
 require 'fluent/time'
+
+require_relative 'viaq_docker_audit'
 
 module Fluent
   class ViaqDockerAuditParser < Parser
